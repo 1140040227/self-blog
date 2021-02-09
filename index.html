@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			canvas{
+				display: block;
+				border: 1px solid red;
+				margin: 0 auto;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="1000px"></canvas>
+	</body>
+	<script type="text/javascript">
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var w=h=1000;
+		
+		function ran(num){
+			return Math.random()*num;
+		}
+		//随机颜色
+		function randomColor() {
+			return '#' + parseInt(Math.random() * 0xffffff).toString(16)
+		}
+		function Ball(x,y,r,color,xspeed,yspeed){
+			this.x = ran(5)+60;
+			this.y = ran(3)+60;
+			
+			this.r = ran(50)+10;
+			this.color = randomColor();
+			this.xspeed = ran(3)+2;
+			this.yspeed = ran(3)+1;
+		}
+		
+		//定义小球显示方法
+		Ball.prototype.show = function(){
+			ctx.beginPath();
+			ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+			ctx.fillStyle = this.color;
+			ctx.fill();
+			ctx.closePath();
+		};
+		
+		Ball.prototype.test = function(){
+			if(this.x-this.r <= 0 || this.x+this.r > w){
+				this.xspeed = -this.xspeed;
+			}
+			if(this.y-this.r <= 0 || this.y+this.r > h){
+				this.yspeed = -this.yspeed;
+			}
+			// ctx.clearRect(0,0,w,h);
+			this.x+=this.xspeed;
+			this.y+=this.yspeed;
+			// drawCircle(this.x,this.y,this.r);
+		}
+		var ballArr = [];
+		//创造小球
+		for(var i = 0;i < 100;i++){
+			var ball = new Ball();
+			ballArr.push(ball);
+			// ball.show();
+		}
+		
+		//小球运动
+		setInterval(function(){
+			ctx.clearRect(0,0,w,h);
+			for(var i = 0;i < ballArr.length;i++){
+				var ball = ballArr[i];
+				ball.show();
+				ball.test();
+			}
+		},10)
+	</script>
+</html>
